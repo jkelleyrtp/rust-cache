@@ -62,17 +62,17 @@ async function cleanProfileTarget(profileDir: string, packages: Packages, checkT
   await rmExcept(path.join(profileDir, "build"), keepPkg, checkTimestamp);
   await rmExcept(path.join(profileDir, ".fingerprint"), keepPkg, checkTimestamp);
 
-  const keepDeps = new Set(
-    packages.flatMap((p) => {
-      const names = [];
-      for (const n of [p.name, ...p.targets]) {
-        const name = n.replace(/-/g, "_");
-        names.push(name, `lib${name}`);
-      }
-      return names;
-    }),
-  );
-  await rmExcept(path.join(profileDir, "deps"), keepDeps, checkTimestamp);
+  // const keepDeps = new Set(
+  //   packages.flatMap((p) => {
+  //     const names = [];
+  //     for (const n of [p.name, ...p.targets]) {
+  //       const name = n.replace(/-/g, "_");
+  //       names.push(name, `lib${name}`);
+  //     }
+  //     return names;
+  //   }),
+  // );
+  // await rmExcept(path.join(profileDir, "deps"), keepDeps, checkTimestamp);
 }
 
 export async function getCargoBins(): Promise<Set<string>> {
@@ -293,7 +293,7 @@ async function rmExcept(dirName: string, keepPrefix: Set<string>, checkTimestamp
         core.debug(`keeping ${name} because it matches the keepPrefix ${prefix}`);
         return;
       } else {
-        core.debug(`removing ${name} because it does not match any of the keepPrefix ${keepPrefix}`);
+        core.debug(`removing ${name} because it does not match any of the keepPrefix ${JSON.stringify(keepPrefix)}`);
         await rm(dir.path, dirent);
       }
     }

@@ -87077,15 +87077,17 @@ async function cleanProfileTarget(profileDir, packages, checkTimestamp = false) 
     const keepPkg = new Set(packages.map((p) => p.name));
     await rmExcept(external_path_default().join(profileDir, "build"), keepPkg, checkTimestamp);
     await rmExcept(external_path_default().join(profileDir, ".fingerprint"), keepPkg, checkTimestamp);
-    const keepDeps = new Set(packages.flatMap((p) => {
-        const names = [];
-        for (const n of [p.name, ...p.targets]) {
-            const name = n.replace(/-/g, "_");
-            names.push(name, `lib${name}`);
-        }
-        return names;
-    }));
-    await rmExcept(external_path_default().join(profileDir, "deps"), keepDeps, checkTimestamp);
+    // const keepDeps = new Set(
+    //   packages.flatMap((p) => {
+    //     const names = [];
+    //     for (const n of [p.name, ...p.targets]) {
+    //       const name = n.replace(/-/g, "_");
+    //       names.push(name, `lib${name}`);
+    //     }
+    //     return names;
+    //   }),
+    // );
+    // await rmExcept(path.join(profileDir, "deps"), keepDeps, checkTimestamp);
 }
 async function getCargoBins() {
     const bins = new Set();
@@ -87293,7 +87295,7 @@ async function rmExcept(dirName, keepPrefix, checkTimestamp = false) {
                 return;
             }
             else {
-                lib_core.debug(`removing ${name} because it does not match any of the keepPrefix ${keepPrefix}`);
+                lib_core.debug(`removing ${name} because it does not match any of the keepPrefix ${JSON.stringify(keepPrefix)}`);
                 await rm(dir.path, dirent);
             }
         }
