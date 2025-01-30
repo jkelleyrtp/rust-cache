@@ -87276,6 +87276,7 @@ async function rmExcept(dirName, keepPrefix, checkTimestamp = false) {
             const { mtime } = await external_fs_default().promises.stat(fileName);
             const isOutdated = Date.now() - mtime.getTime() > ONE_WEEK;
             if (isOutdated) {
+                lib_core.debug(`removing ${fileName} because it is outdated ${mtime.getTime()}`);
                 await rm(dir.path, dirent);
             }
             return;
@@ -87286,8 +87287,15 @@ async function rmExcept(dirName, keepPrefix, checkTimestamp = false) {
         if (idx !== -1) {
             name = name.slice(0, idx);
         }
-        if (!keepPrefix.has(name)) {
-            await rm(dir.path, dirent);
+        for (const prefix of keepPrefix) {
+            if (name.startsWith(prefix)) {
+                lib_core.debug(`keeping ${name} because it matches the keepPrefix ${prefix}`);
+                return;
+            }
+            else {
+                lib_core.debug(`removing ${name} because it does not match any of the keepPrefix ${keepPrefix}`);
+                await rm(dir.path, dirent);
+            }
         }
     }
 }
