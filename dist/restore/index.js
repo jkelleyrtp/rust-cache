@@ -87294,11 +87294,9 @@ async function rmExcept(dirName, keepPrefix, checkTimestamp = false) {
                 lib_core.debug(`keeping ${name} because it matches the keepPrefix ${prefix}`);
                 return;
             }
-            else {
-                lib_core.debug(`removing ${name} because it does not match any of the keepPrefix ${JSON.stringify(keepPrefix)}`);
-                await rm(dir.path, dirent);
-            }
         }
+        lib_core.debug(`removing ${name} because it does not match any of the keepPrefix ${JSON.stringify(keepPrefix)}`);
+        await rm(dir.path, dirent);
     }
 }
 async function rm(parent, dirent) {

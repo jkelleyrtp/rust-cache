@@ -292,11 +292,11 @@ async function rmExcept(dirName: string, keepPrefix: Set<string>, checkTimestamp
       if (name.startsWith(prefix)) {
         core.debug(`keeping ${name} because it matches the keepPrefix ${prefix}`);
         return;
-      } else {
-        core.debug(`removing ${name} because it does not match any of the keepPrefix ${JSON.stringify(keepPrefix)}`);
-        await rm(dir.path, dirent);
       }
     }
+
+    core.debug(`removing ${name} because it does not match any of the keepPrefix ${JSON.stringify(keepPrefix)}`);
+    await rm(dir.path, dirent);
   }
 }
 
